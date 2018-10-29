@@ -1,0 +1,5 @@
+model_checkpoint_path: "vae-fc-20181029-171037"
+all_model_checkpoint_paths: "vae-fc-20181028-114411"
+all_model_checkpoint_paths: "vae-fc-20181028-163044"
+all_model_checkpoint_paths: "vae-fc-20181028-210159"
+all_model_checkpoint_paths: "vae-fc-20181029-171037"
