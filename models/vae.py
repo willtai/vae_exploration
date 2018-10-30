@@ -7,7 +7,7 @@ DECODER_HL1_NODES = 512
 DECODER_OUT_NODES = 512
 
 class VAE():
-    def __init__(self,beta=1,latent_dim=2,batch_size=100,learning_rate=1e-4):
+    def __init__(self, beta=1, latent_dim=2, batch_size=100, learning_rate=1e-4):
         """
         Instantiates the VAE, builds placeholder for the data, the network then runs an InteractiveSession.
         :param beta: Coefficient term to weigh how important the KL term is in the loss function.
@@ -67,8 +67,7 @@ class VAE():
         :return: Parameters of Gaussian distribution of z.
         """
         l1 = tf.add(tf.matmul(data,self.encoder_input['weights']), self.encoder_input['biases'])
-        l1 = tf.nn.relu(l1)
-        l1 = tf.layers.batch_normalization(l1)
+        l1 = tf.nn.tanh(l1)
 
         self.z_mu = tf.add(tf.matmul(l1,self.encoder_output_mu['weights']), self.encoder_output_mu['biases'])
         self.z_log_sigma = tf.add(tf.matmul(l1,self.encoder_output_log_sigma['weights']), self.encoder_output_log_sigma['biases'])
@@ -79,8 +78,7 @@ class VAE():
         :return: Reconstructed flattened digit from sampled z.
         """
         l1 = tf.add(tf.matmul(self.z,self.decoder_input['weights']), self.decoder_input['biases'])
-        l1 = tf.nn.relu(l1)
-        l1 = tf.layers.batch_normalization(l1)
+        l1 = tf.nn.tanh(l1)
 
         out = tf.add(tf.matmul(l1,self.decoder_output['weights']), self.decoder_output['biases'])
         self.x_reconstruction = tf.nn.sigmoid(out)
