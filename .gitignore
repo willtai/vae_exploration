@@ -1,2 +1,3 @@
 saved_models/*
 .idea/*
+notebooks/.ipynb_checkpoints/*
