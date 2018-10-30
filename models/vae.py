@@ -21,7 +21,7 @@ class VAE():
         self.learning_rate = learning_rate
         self.x = tf.placeholder('float', [None, 784], name='x')
         self._build_network()
-        self._vae_loss_and_optimizer()
+        self._vae_elbo_and_optimizer()
         
         init = tf.global_variables_initializer()
         self.sess = tf.InteractiveSession()
@@ -91,17 +91,17 @@ class VAE():
         epsilon = tf.random_normal(shape=[self.batch_size, self.latent_dim],mean=0.0, stddev=1.0, name='epsilon', dtype='float32')
         self.z = tf.add(self.z_mu,tf.multiply(epsilon, tf.exp(0.5 * self.z_log_sigma)), name='z')
         
-    def _vae_loss_and_optimizer(self):
+    def _vae_elbo_and_optimizer(self):
         """
-        Loss function for training. Binary cross entropy used as binarized MNIST data is used.
+        Maximize lower bound for training. Binary cross entropy used as binarized MNIST data is used.
         :return: Reconstruction, KL loss, total loss and optimizer.
         """
         self.recon = tf.reduce_mean(tf.reduce_sum(tf.keras.backend.binary_crossentropy(self.x, self.x_reconstruction)))
         # KL divergence between q(z|x) and p(z)
         self.kl = tf.reduce_mean(0.5 * tf.reduce_sum(tf.exp(self.z_log_sigma) + tf.square(self.z_mu) - 1 - self.z_log_sigma, 1))
 
-        self.loss = self.recon + self.beta*self.kl
-        self.optimizer = tf.train.AdamOptimizer(self.learning_rate).minimize(self.loss)
+        self.elbo = self.recon + self.beta * self.kl
+        self.optimizer = tf.train.AdamOptimizer(self.learning_rate).minimize(self.elbo)
 
     def fit(self, x_batch):
         """
@@ -109,7 +109,7 @@ class VAE():
         :param x_batch: Mini-batch of data for training.
         :return: Optimizer, total loss, reconstruction loss and KL loss.
         """
-        return self.sess.run([self.optimizer, self.loss, self.recon, self.kl], feed_dict={self.x: x_batch})
+        return self.sess.run([self.optimizer, self.elbo, self.recon, self.kl], feed_dict={self.x: x_batch})
                 
     def reconstruct_X(self, x_true):
         """
