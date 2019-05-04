@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+saved_models/*
 notebooks/saved_models/*
 notebooks/data/*
 .idea/*
