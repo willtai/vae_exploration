@@ -1,2 +1,2 @@
-model_checkpoint_path: "vae-fc-20181029-232545"
-all_model_checkpoint_paths: "vae-fc-20181029-232545"
+model_checkpoint_path: "japanese-vae-20190504-232426"
+all_model_checkpoint_paths: "japanese-vae-20190504-232426"
